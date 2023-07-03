@@ -1,42 +1,39 @@
 #include <iostream>
 #include <vector>
+#include "point.h"
+#include "coord.h"
+#include "node.h"
 
 namespace kdtree_ns {
 
-struct Point {
-  int x,y;
-};
-
-struct Node {
-  Point point;
-  Node* left_child;
-  Node* right_child;
-};
-
-class kdtree {
+class KdTree {
 
   public:
 
-  kdtree();
+  KdTree();
 
-  bool insertPoint(Point point);
+  bool insertPoint(point_ns::Point point, coord_ns::Coord coord, double conf);
 
-  bool isIn(Point point);
+  point_ns::Point coordToPoint(coord_ns::Coord coord);
+
+  bool isIn(point_ns::Point point);
 
   private:
 
-  Node* createNewNode (Point point);
+  node_ns::Node* insertNodeData(node_ns::Node* node, coord_ns::Coord coord, double conf);
 
-  Node* insertRecursively(Node* parent, Point point, uint level);
+  node_ns::Node* createNewNode(point_ns::Point point);
 
-  bool searchRecursively(Node* parent, Point point, uint level);
+  node_ns::Node* insertRecursively(node_ns::Node* parent, point_ns::Point point, uint level, coord_ns::Coord coord, double conf);
 
-  Point* getNearestNeighbors(uint number, uint radius);
+  bool searchRecursively(node_ns::Node* parent, point_ns::Point point, uint level);
 
-  Node* tree = NULL;
+  point_ns::Point* getNearestNeighbors(uint number, uint radius);
+
+  node_ns::Node* tree = NULL;
   float resolution;
-  Point origin;
-
+  point_ns::Point origin;
+  point_ns::Point maxPoint;
 };
 
 }
