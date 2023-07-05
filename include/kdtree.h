@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include "point.h"
 #include "coord.h"
 #include "node.h"
@@ -14,11 +15,15 @@ class KdTree {
 
   bool insertPoint(point_ns::Point point, coord_ns::Coord coord, double conf);
 
-  point_ns::Point coordToPoint(coord_ns::Coord coord);
+  point_ns::Point coordToIndex(coord_ns::Coord coord);
 
   bool isIn(point_ns::Point point);
 
   private:
+
+  bool newPoint(point_ns::Point point);
+
+  inline int getCantor(point_ns::Point point);
 
   node_ns::Node* insertNodeData(node_ns::Node* node, coord_ns::Coord coord, double conf);
 
@@ -34,6 +39,8 @@ class KdTree {
   float resolution;
   point_ns::Point origin;
   point_ns::Point maxPoint;
+
+  std::unordered_map<int, node_ns::Node*> tree_map;
 };
 
 }

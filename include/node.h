@@ -9,11 +9,15 @@ class Node {
   public:
   Node(): point(), detSum(0), points(), avgConf(0.0), density(0.0), left_child(NULL), right_child(NULL) {} 
 
-  Node* insertNodeData(Node* node, coord_ns::Coord coord, double conf);
+  void insertNodeData(coord_ns::Coord coord, double conf);
 
   Node* createNewNode(point_ns::Point point);
 
   double getAvgSlope();
+  
+  inline int getCantor();
+
+  bool coordExists(coord_ns::Coord coord, double accuracy);
 
   inline point_ns::Point getPoint();
 
@@ -21,6 +25,9 @@ class Node {
   Node* right_child;
 
   private:
+  int cantor_key;
+
+  inline void setCantor(point_ns::Point point);
 
   point_ns::Point point;
 

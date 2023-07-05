@@ -1,3 +1,5 @@
+/* TODO : replace unordered_map with a big array*/
+
 #include "kdtree.h"
 
 using namespace kdtree_ns;
@@ -5,10 +7,10 @@ using namespace kdtree_ns;
 node_ns::Node* KdTree::insertRecursively(node_ns::Node* parent, point_ns::Point point, uint level, coord_ns::Coord coord, double conf){
   if (parent == NULL){
     parent = createNewNode(point); //only case that the parent in NULL is when we insert the first element aka root
-
+    parent->insertNodeData(coord, conf);
+    tree_map[parent->getCantor()] = parent;
   }
-  //checks x coordinates
-  if (level%2==0){
+  if (level%2==0){ //checks x coordinates
     if (point.x < parent->getPoint().x){
       parent->left_child  = insertRecursively(parent->left_child, point, level+1, coord, conf);
     }else{
@@ -31,27 +33,9 @@ bool KdTree::insertPoint(point_ns::Point point, coord_ns::Coord coord, double co
 }
 
 
-// Node* kdtree::insertNodeData(Node* node, Coord coord, double conf){
-//   //Increment Detections Sum 
-//   node->detSum++;
-//   //Update Avg Confidence
-//   if (node->detSum > 1){
-//     node->avgConf = ((node->detSum-1)*(node->avgConf)+conf)/node->detSum;
-//   }else{
-//     node->avgConf = conf;
-//   }
-//   //Update Density
-//   node->density = node->detSum/resolution;
-  
-//   node.
-
-//   return node;
-// }
-
-
-// Takes the Coord and converts it to matrix index. It also updates the origin if the value is 
+//Recieves the Coord and converts it to matrix index. It also updates the origin if the value is 
 //negative or extends it if the value is greater than the matrix. The function returns a Point.
-point_ns::Point KdTree::coordToPoint(coord_ns::Coord coord){
+point_ns::Point KdTree::coordToIndex(coord_ns::Coord coord){
   point_ns::Point point;
   if (coord.x/resolution<0){
     point.x = 0;
@@ -88,6 +72,10 @@ bool KdTree::searchRecursively(node_ns::Node* parent, point_ns::Point point, uin
   }
 }
 
+int KdTree::getCantor(point_ns::Point point){
+  return (((point.x + point.y + 1)*(point.x + point.y))/2) + point.y;
+}
+
 
 bool KdTree::isIn(point_ns::Point point){
   if (tree==NULL){
@@ -95,8 +83,3 @@ bool KdTree::isIn(point_ns::Point point){
   }
   return searchRecursively(tree, point, 0);
 }
-
-
-// Point* kdtree::getNearestNeighbors(uint number, uint radius){
-  
-// }

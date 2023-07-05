@@ -18,27 +18,34 @@ int Node::getIdx(){
   return idx;
 }
 
+int Node::getCantor(){
+  return cantor_key;
+}
+
 Node* Node::createNewNode(point_ns::Point point){
   Node* newNode = new Node;
 
   newNode->point = point;
   newNode->left_child = NULL;
   newNode->right_child = NULL;
+  newNode->setCantor(point);
   
   return newNode;
 }
 
-Node* Node::insertNodeData(Node* node, coord_ns::Coord coord, double conf){
+void Node::insertNodeData(coord_ns::Coord coord, double conf){
   //Update Avg Confidence
-  node->avgConf = (node->detSum*(node->avgConf)+conf)/node->detSum+1;
+  avgConf = (detSum*(avgConf)+conf)/detSum+1;
   //Increment Detections Sum 
-  node->detSum++;
+  detSum++;
   //Add coords to the points[20] array in a "circular buffer manner"
-  node->points[getIdx()] = coord;
+  points[getIdx()] = coord;
   //Update Density
-  node->density = node->detSum/resolution;
+  density = detSum/resolution;
 }
 
+//Calculates the average angle between the normal vectors of planes defined by 3 points
+//and the origin vector (as reference).
 double Node::getAvgSlope(){
   double avg_angle = 0.0;
   if (lastIdx>3 || !looped){
@@ -48,10 +55,9 @@ double Node::getAvgSlope(){
     }else{
       sum_set = 6;
     }
-    double det_sum =0;
     //reference ground plane vector
     double r[3] = {0, 1, 0};
-    for (int i=0;i<det_sum;i++){
+    for (int i=0;i<sum_set;i++){
       double pq[3] = {points[i*3+0].x-points[i*3+1].x, points[i*3+0].y-points[i*3+1].y, points[i*3+0].z-points[i*3+1].z};
       double pr[3] = {points[i*3+0].x-points[i*3+2].x, points[i*3+0].y-points[i*3+2].y, points[i*3+0].z-points[i*3+2].z};
       //cross product
@@ -67,4 +73,37 @@ double Node::getAvgSlope(){
     }
   }
   return avg_angle;
+}
+
+
+void Node::setCantor(point_ns::Point point){
+  cantor_key= (((point.x + point.y + 1)*(point.x + point.y))/2) + point.y;
+}
+
+bool Node::coordExists(coord_ns::Coord coord, double accuracy){
+  int it;
+  if(!looped){
+    it = 18;
+  }else{
+    it = lastIdx;
+  }
+  double x_coord = roundDecimal(coord.x, accuracy);
+  double y_coord = roundDecimal(coord.y, accuracy);
+  double z_coord = roundDecimal(coord.z, accuracy);
+  for (int i=0;i<it;i++){
+    if (roundDecimal(points[i].x,accuracy)==x_coord &&
+        roundDecimal(points[i].y,accuracy)==y_coord &&
+        roundDecimal(points[i].z,accuracy)==z_coord){
+      return true;
+    }
+  }
+  return false;
+}
+
+double roundDecimal(double num, double accuracy){
+  double  intpart;
+  double fractpart = modf (num, &intpart);
+  fractpart  = roundf(fractpart * accuracy)/accuracy; // Round to 5 decimal places
+  double rounded = intpart + fractpart;
+  return rounded;
 }
