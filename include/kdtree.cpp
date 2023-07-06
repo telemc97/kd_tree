@@ -7,7 +7,6 @@ using namespace kdtree_ns;
 node_ns::Node* KdTree::insertRecursively(node_ns::Node* parent, point_ns::Point point, uint level, coord_ns::Coord coord, double conf){
   if (parent == NULL){
     parent = createNewNode(point); //only case that the parent in NULL is when we insert the first element aka root
-    parent->insertNodeData(coord, conf);
     tree_map[parent->getCantor()] = parent;
   }
   if (level%2==0){ //checks x coordinates
@@ -28,7 +27,11 @@ node_ns::Node* KdTree::insertRecursively(node_ns::Node* parent, point_ns::Point 
 
 
 bool KdTree::insertPoint(point_ns::Point point, coord_ns::Coord coord, double conf){
-  tree = insertRecursively(tree, point, 0, coord, conf);
+  if (tree_map[getCantor(point)]==NULL){
+    tree = insertRecursively(tree, point, 0, coord, conf);
+  }else{
+    tree_map[getCantor(point)]->insertNodeData(coord, conf);
+  }
   return true;
 }
 
