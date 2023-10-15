@@ -1,3 +1,6 @@
+#ifndef _NODE_
+#define _NODE_
+
 #include <iostream>
 #include <vector>
 #include "point.h"
@@ -6,6 +9,7 @@
 namespace node_ns {
 
 class Node {
+  // --------------------------------Public Members-----------------------------------------
   public:
   Node(): point(), detSum(0), points(), avgConf(0.0), density(0.0), left_child(NULL), right_child(NULL) {} 
 
@@ -24,6 +28,7 @@ class Node {
   Node* left_child;
   Node* right_child;
 
+  // --------------------------------Private Members----------------------------------------
   private:
   int cantor_key;
 
@@ -44,3 +49,5 @@ class Node {
   double density;
 };
 }
+
+#endif

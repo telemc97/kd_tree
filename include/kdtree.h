@@ -1,3 +1,6 @@
+#ifndef _KDTREE_
+#define _KDTREE_
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -8,7 +11,7 @@
 namespace kdtree_ns {
 
 class KdTree {
-
+  // --------------------------------Public Members-----------------------------------------
   public:
 
   KdTree();
@@ -19,6 +22,7 @@ class KdTree {
 
   bool isIn(point_ns::Point point);
 
+  // --------------------------------Private Members----------------------------------------
   private:
 
   bool newPoint(point_ns::Point point);
@@ -42,5 +46,6 @@ class KdTree {
 
   std::unordered_map<int, node_ns::Node*> tree_map;
 };
-
 }
+
+#endif

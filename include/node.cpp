@@ -3,6 +3,14 @@
 
 using namespace node_ns;
 
+static double roundDecimal(double num, double accuracy){
+  double  intpart;
+  double fractpart = modf (num, &intpart);
+  fractpart  = roundf(fractpart * accuracy)/accuracy; // Round to 5 decimal places
+  double rounded = intpart + fractpart;
+  return rounded;
+}
+
 point_ns::Point Node::getPoint(){
   return point;
 }
@@ -98,12 +106,4 @@ bool Node::coordExists(coord_ns::Coord coord, double accuracy){
     }
   }
   return false;
-}
-
-double roundDecimal(double num, double accuracy){
-  double  intpart;
-  double fractpart = modf (num, &intpart);
-  fractpart  = roundf(fractpart * accuracy)/accuracy; // Round to 5 decimal places
-  double rounded = intpart + fractpart;
-  return rounded;
 }
