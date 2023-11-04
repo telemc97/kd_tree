@@ -26,11 +26,11 @@ node_ns::Node* KdTree::insertRecursively(node_ns::Node* parent, point_ns::Point 
 }
 
 
-bool KdTree::insertPoint(point_ns::Point point, coord_ns::Coord coord, double conf){
+bool KdTree::insertPoint(point_ns::Point point, coord_ns::Coord coord, int ts, double conf, int id, std::string cls){
   if (tree_map[getCantor(point)]==NULL){
     tree = insertRecursively(tree, point, 0, coord, conf);
   }else{
-    tree_map[getCantor(point)]->insertNodeData(coord, conf);
+    tree_map[getCantor(point)]->insertNodeData(point, coord, ts, conf, id, cls);
   }
   return true;
 }
