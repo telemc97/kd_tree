@@ -30,7 +30,7 @@ Node* Node::createNewNode(point_ns::Point point){
   return newNode;
 }
 
-void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, int ts, float conf, int id, std::string cls ){
+void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf, int id, std::string cls ){
 
   //Update Avg Confidence
   confidence = (detSum*(confidence)+conf)/detSum+1;
@@ -48,6 +48,13 @@ void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, int ts, flo
 
   point = pt;
 }
+
+Time Node::returnLastTime(){
+  Time time;
+  time.sec = past_points.back().sec;
+  time.nsec = past_points.back().nsec;
+  return time;
+} 
 
 
 void Node::setCantor(point_ns::Point point){

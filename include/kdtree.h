@@ -16,7 +16,7 @@ class KdTree {
 
   KdTree();
 
-  bool insertPoint(point_ns::Point point, coord_ns::Coord coord, int ts, double conf, int id, std::string cls);
+  bool insertPoint(coord_ns::Coord coord, double conf, int id, std::string cls);
 
   point_ns::Point coordToIndex(coord_ns::Coord coord);
 

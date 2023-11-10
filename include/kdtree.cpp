@@ -26,15 +26,15 @@ node_ns::Node* KdTree::insertRecursively(node_ns::Node* parent, point_ns::Point 
 }
 
 
-bool KdTree::insertPoint(point_ns::Point point, coord_ns::Coord coord, int ts, double conf, int id, std::string cls){
+bool KdTree::insertPoint(coord_ns::Coord coord, double conf, int id, std::string cls){
+  point_ns::Point point = coordToIndex(coord);
   if (tree_map[getCantor(point)]==NULL){
     tree = insertRecursively(tree, point, 0, coord, conf);
   }else{
-    tree_map[getCantor(point)]->insertNodeData(point, coord, ts, conf, id, cls);
+    tree_map[getCantor(coordToIndex(coord))]->insertNodeData(point, coord, conf, id, cls);
   }
   return true;
 }
-
 
 //Recieves the Coord and converts it to matrix index. It also updates the origin if the value is 
 //negative or extends it if the value is greater than the matrix. The function returns a Point.
@@ -61,7 +61,6 @@ point_ns::Point KdTree::coordToIndex(coord_ns::Coord coord){
   return point;
 }
 
-
 bool KdTree::searchRecursively(node_ns::Node* parent, point_ns::Point point, uint level){
   if (parent->getPoint().x==point.x && parent->getPoint().y==point.y){
     return true;
@@ -78,7 +77,6 @@ bool KdTree::searchRecursively(node_ns::Node* parent, point_ns::Point point, uin
 int KdTree::getCantor(point_ns::Point point){
   return (((point.x + point.y + 1)*(point.x + point.y))/2) + point.y;
 }
-
 
 bool KdTree::isIn(point_ns::Point point){
   if (tree==NULL){

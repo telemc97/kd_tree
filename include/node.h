@@ -11,12 +11,17 @@
 
 namespace node_ns {
 
+struct Time{
+  int sec, nsec;
+  Time(): sec(-1), nsec(-1) {}; 
+};
+
 class Node {
   // --------------------------------Public Members-----------------------------------------
   public:
   Node(): point(), left_child(NULL), right_child(NULL) {} 
 
-  void insertNodeData(point_ns::Point pt, coord_ns::Coord coord, int ts, float conf, int id, std::string cls );
+  void insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf, int id, std::string cls );
 
   Node* createNewNode(point_ns::Point point);
   
@@ -43,6 +48,8 @@ class Node {
   std::queue<coord_ns::Coord> future_points;
   int future_points_size;
 
+  Time returnLastTime();
+
   int resolution;
 
   //Confidence of the node is calculated as the average confidence of its detections.
@@ -54,6 +61,7 @@ class Node {
   std::string class_name;
 
 };
+
 }
 
 #endif
