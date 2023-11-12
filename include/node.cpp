@@ -37,10 +37,10 @@ void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf,
   //Increment Detections Sum 
   detSum++;
   //Add coords to the points[20] array in a "circular buffer manner"
-  past_points.push(coord);
+  past_points.push_back(coord);
   //if the queue gets bigger than the predefined size pop the last element
   if(past_points.size()>past_points_size){
-    past_points.pop();
+    past_points.pop_front();
   }
   //Update Density
   density = detSum/resolution;
@@ -49,10 +49,32 @@ void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf,
   point = pt;
 }
 
+void Node::calcAvgSpeed(){
+  //calculate avg speed on the x axis
+  //calculate avg speed on the y axis
+  //calculate avg speed on the z axis
+  coord_ns::Coord prev_coord;
+  for (auto it = past_points.cbegin(); it != past_points.cend(); ++it){
+    if (prev_coord.x !=-1){
+      //u = (x-xprev)/(t-tprev)
+      avg_speed[0] += (it->x-prev_coord.x)/(it->t_stamp-prev_coord.t_stamp);
+      avg_speed[1] += (it->y-prev_coord.x)/(it->t_stamp-prev_coord.t_stamp);
+      avg_speed[2] += (it->y-prev_coord.x)/(it->t_stamp-prev_coord.t_stamp);
+    }
+    prev_coord = *it;
+  }
+  avg_speed[0] /= past_points_size;
+  avg_speed[1] /= past_points_size;
+  avg_speed[2] /= past_points_size;
+}
+
+void Node::calcAvgHeading(){
+  //TODO: implement
+}
+
 Time Node::returnLastTime(){
   Time time;
-  time.sec = past_points.back().sec;
-  time.nsec = past_points.back().nsec;
+  time.sec = past_points.back().t_stamp;
   return time;
 } 
 

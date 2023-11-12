@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <vector>
-#include <queue>
+#include <deque>
 #include "point.h"
 #include "coord.h"
 
@@ -42,10 +42,15 @@ class Node {
 
   inline void setCantor(point_ns::Point point);
 
-  std::queue<coord_ns::Coord> past_points;
+  void calcAvgSpeed();
+  std::vector<double> avg_speed;
+
+  void Node::calcAvgHeading();
+
+  std::deque<coord_ns::Coord> past_points;
   int past_points_size;
 
-  std::queue<coord_ns::Coord> future_points;
+  std::deque<coord_ns::Coord> future_points;
   int future_points_size;
 
   Time returnLastTime();

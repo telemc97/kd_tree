@@ -5,8 +5,8 @@ namespace coord_ns{
 
 struct Coord {
   double x,y,z;
-  int sec, nsec;
-  Coord(): x(0.0), y(0.0), z(0.0), sec(0), nsec(0) {}
+  double t_stamp;
+  Coord(): x(-1), y(-1), z(-1), t_stamp(-1) {};
 };
 }
 
