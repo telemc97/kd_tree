@@ -70,6 +70,18 @@ void Node::calcAvgSpeed(){
 
 void Node::calcAvgHeading(){
   //TODO: implement
+  coord_ns::Coord prev_coord;
+  for (auto it = past_points.cbegin(); it != past_points.cend(); ++it){
+    if (prev_coord.x != -1){
+      avg_heading[0] += it->x - prev_coord.x;
+      avg_heading[1] += it->y - prev_coord.y;
+      avg_heading[2] += it->z - prev_coord.z;
+    }
+    prev_coord = *it;
+  }
+  avg_heading[0] /= past_points_size;
+  avg_heading[1] /= past_points_size;
+  avg_heading[2] /= past_points_size;
 }
 
 Time Node::returnLastTime(){
