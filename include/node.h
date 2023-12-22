@@ -45,7 +45,7 @@ class Node {
   void calcAvgSpeed();
   std::vector<double> avg_speed;
 
-  void Node::calcAvgHeading();
+  void calcAvgHeading();
   std::vector<double> avg_heading;
 
   std::deque<coord_ns::Coord> past_points;
