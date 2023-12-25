@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <deque>
+#include <unordered_map>
 #include "point.h"
 #include "coord.h"
 
@@ -19,11 +20,11 @@ struct Time{
 class Node {
   // --------------------------------Public Members-----------------------------------------
   public:
-  Node(): point(), left_child(NULL), right_child(NULL) {} 
+  Node(point_ns::Point pt, coord_ns::Coord coord): point(), left_child(NULL), right_child(NULL) {} 
 
-  void insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf, int id, std::string cls );
+  void updateNodeData(coord_ns::Coord coord);
 
-  Node* createNewNode(point_ns::Point point);
+  Node* createNewNode(point_ns::Point pt, coord_ns::Coord coord);
   
   inline int getCantor();
 
@@ -42,27 +43,26 @@ class Node {
 
   inline void setCantor(point_ns::Point point);
 
-  void calcAvgSpeed();
+  void calcAvgSpeed(int id);
   std::vector<double> avg_speed;
 
-  void calcAvgHeading();
+  void calcAvgHeading(int id);
   std::vector<double> avg_heading;
 
-  std::deque<coord_ns::Coord> past_points;
+  std::unordered_map<int, std::deque<coord_ns::Coord>> past_points;
   int past_points_size;
 
-  std::deque<coord_ns::Coord> future_points;
+  std::unordered_map<int, std::deque<coord_ns::Coord>> future_points;
   int future_points_size;
 
-  Time returnLastTime();
+  Time returnLastTime(int id);
 
   int resolution;
 
   //Confidence of the node is calculated as the average confidence of its detections.
-  float confidence;
-  int detSum;
-  int density;
-  int id;
+  float average_confidence;
+  int detections_sum;
+  int detections_density;
   
   std::string class_name;
 

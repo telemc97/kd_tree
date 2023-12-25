@@ -11,6 +11,14 @@ static double roundDecimal(double num, double accuracy){
   return rounded;
 }
 
+Node::Node(point_ns::Point pt, coord_ns::Coord coord){
+  this->point = pt;
+  this->left_child = NULL;
+  this->right_child = NULL;
+  this->setCantor(pt);
+  this->updateNodeData(coord);
+}
+
 point_ns::Point Node::getPoint(){
   return point;
 }
@@ -19,42 +27,29 @@ int Node::getCantor(){
   return cantor_key;
 }
 
-Node* Node::createNewNode(point_ns::Point point){
-  Node* newNode = new Node;
-
-  newNode->point = point;
-  newNode->left_child = NULL;
-  newNode->right_child = NULL;
-  newNode->setCantor(point);
-  
-  return newNode;
-}
-
-void Node::insertNodeData(point_ns::Point pt, coord_ns::Coord coord, float conf, int id, std::string cls ){
+void Node::updateNodeData(coord_ns::Coord coord){
 
   //Update Avg Confidence
-  confidence = (detSum*(confidence)+conf)/detSum+1;
+  average_confidence = (detections_sum*(average_confidence)+coord.conf)/detections_sum+1;
   //Increment Detections Sum 
-  detSum++;
+  detections_sum++;
   //Add coords to the points[20] array in a "circular buffer manner"
-  past_points.push_back(coord);
+  past_points[coord.id].push_back(coord);
   //if the queue gets bigger than the predefined size pop the last element
   if(past_points.size()>past_points_size){
-    past_points.pop_front();
+    past_points[coord.id].pop_front();
   }
   //Update Density
-  density = detSum/resolution;
+  detections_density = detections_sum/resolution;
   //TODO implement predictions for future points
-
-  point = pt;
 }
 
-void Node::calcAvgSpeed(){
+void Node::calcAvgSpeed(int id){
   //calculate avg speed on the x axis
   //calculate avg speed on the y axis
   //calculate avg speed on the z axis
   coord_ns::Coord prev_coord;
-  for (auto it = past_points.cbegin(); it != past_points.cend(); ++it){
+  for (auto it = past_points[id].cbegin(); it != past_points[id].cend(); ++it){
     if (prev_coord.x !=-1){
       //u = (x-xprev)/(t-tprev)
       avg_speed[0] += (it->x-prev_coord.x)/(it->t_stamp-prev_coord.t_stamp);
@@ -68,10 +63,10 @@ void Node::calcAvgSpeed(){
   avg_speed[2] /= past_points_size;
 }
 
-void Node::calcAvgHeading(){
+void Node::calcAvgHeading(int id){
   //TODO: implement
   coord_ns::Coord prev_coord;
-  for (auto it = past_points.cbegin(); it != past_points.cend(); ++it){
+  for (auto it = past_points[id].cbegin(); it != past_points[id].cend(); ++it){
     if (prev_coord.x != -1){
       avg_heading[0] += it->x - prev_coord.x;
       avg_heading[1] += it->y - prev_coord.y;
@@ -84,9 +79,9 @@ void Node::calcAvgHeading(){
   avg_heading[2] /= past_points_size;
 }
 
-Time Node::returnLastTime(){
+Time Node::returnLastTime(int id){
   Time time;
-  time.sec = past_points.back().t_stamp;
+  time.sec = past_points[id].back().t_stamp;
   return time;
 } 
 

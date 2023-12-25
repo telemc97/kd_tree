@@ -31,7 +31,7 @@ class KdTree {
 
   node_ns::Node* insertNodeData(node_ns::Node* node, coord_ns::Coord coord, double conf);
 
-  node_ns::Node* createNewNode(point_ns::Point point);
+  // node_ns::Node* createNewNode(point_ns::Point point);
 
   node_ns::Node* insertRecursively(node_ns::Node* parent, point_ns::Point point, uint level, coord_ns::Coord coord, double conf);
 
